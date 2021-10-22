@@ -11,6 +11,7 @@ curl $APISERVER/api/v1/namespaces/default/services \
   --insecure
 ```
 
+
 ---
 
 Here we can see the IP in the audit log (the header was kept and reported):
