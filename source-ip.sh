@@ -58,3 +58,17 @@ Here we can see the IP in the audit log (the header was kept and reported):
   }
 }
 ```
+
+---
+
+#### Diagnostic Steps:
+
+- Currently, there is no proxy support for passing actual sourceIPs through non-cloud load balancers (HAProxy, F5, NetScaler) due to the non-terminating pattern they use and `X-Forwarded-For` headers are not a valid solution. **EDIT**: OpenShift Container Platform 4.8 adds support for configuring the [PROXY protocol for the Ingress Controller](https://docs.openshift.com/container-platform/4.8/networking/ingress-operator.html#nw-ingress-controller-configuration-proxy-protocol_configuring-ingress) on non-cloud platforms, specifically for HostNetwork or NodePortService endpoint publishing strategy types.
+
+- This is only supported in cloud load balancers at this time due to the fact that cloud load balancers do not use `X-Forwarded-For`. Instead, they use low-level network "tricks" to fake the client IP so that kube-apiserver thinks it speaks directly to the client and not to the load-balancer. This is advanced network voodoo.
+
+- Note that currently the API load balancer must be level 4 - It will not terminate TLS and hence the load balancer cannot add headers. Plus it has to do NAT in some way, (i.e. keep the client IP visible to the server. If it creates a new TCP connection, this won't be the case).  (i.e. HAProxy in standard mode won't do NAT).
+
+- There seems to be [PROXY protocol support](https://support.citrix.com/article/CTX224265) as well as a way to [configure L4 load balancing](https://support.citrix.com/article/CTX205280) for NetScaler, but may not be supported.
+
+- There also seems to be a [working PR](https://github.com/kubernetes/kubernetes/pull/96452) to add support for PROXY protocol to the API. 
