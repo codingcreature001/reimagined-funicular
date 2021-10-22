@@ -61,7 +61,7 @@ Here we can see the IP in the audit log (the header was kept and reported):
 
 ---
 
-##### Diagnostic Steps:
+### Diagnostic Steps:
 
 - Currently, there is no proxy support for passing actual sourceIPs through non-cloud load balancers (HAProxy, F5, NetScaler) due to the non-terminating pattern they use and `X-Forwarded-For` headers are not a valid solution. **EDIT**: OpenShift Container Platform 4.8 adds support for configuring the [PROXY protocol for the Ingress Controller](https://docs.openshift.com/container-platform/4.8/networking/ingress-operator.html#nw-ingress-controller-configuration-proxy-protocol_configuring-ingress) on non-cloud platforms, specifically for HostNetwork or NodePortService endpoint publishing strategy types.
 
